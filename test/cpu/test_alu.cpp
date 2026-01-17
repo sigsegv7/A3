@@ -19,7 +19,7 @@ int main(int argc, char** argv, char** env)
     Verilated::traceEverOn(true);
     VerilatedVcdC *m_trace = new VerilatedVcdC;
     alu->trace(m_trace, 5);
-    m_trace->open("waveform.vcd");
+    m_trace->open("alu.vcd");
 
     for (int i = 0; i < MAX_SIM_ITER; ++i) {
         alu->operand_0 = i;
