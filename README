@@ -35,14 +35,21 @@ firmware. This region spans up to 0x800000 giving a maximum of 8 MiB for firmwar
 | 7:0    13:8   31:9  |
 +---------------------+
 
+ (C TYPE ENCODING)
+
++--------+
+| OPCODE |
+| 7:0    |
++--------+
+
 ** OPCODES **
 
 --------------------------------
-0x00  : NO-OPERATION  [N/A]
+0x00  : NO-OPERATION  [C-TYPE]
 0x01  : SUB IMM       [B-TYPE]
 0x02  : SUB REG       [A-TYPE]
 0x03  : ADD IMM       [B-TYPE]
 0x04  : ADD REG       [A-TYPE]
 0x05  : ADD IMM       [B-TYPE]
-0x06  : HLT           [N/A]
+0x06  : HLT           [C-TYPE]
 --------------------------------
