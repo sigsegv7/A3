@@ -1,0 +1,41 @@
+-- THE A3 ARCHITECTURE REFERNECE MANUAL --
+
+** ABOUT **
+
+The A3 architecture is a 64-bit System-on-Chip (SoC) architecture aimed to be
+compact and introspectable.
+
+** REGISTERS **
+
+SP       : Stack pointer
+FP       : Frame pointer
+G0 - G15 : General purpose
+TTBR:    : Translation Table Base Register
+
+
+** Instruction encoding **
+
+(A TYPE ENCODING)
+
++---------------------------+
+| OPCODE   RD0   RS1    RS2 |
+| 7:0    13:8   20:9  26:10 |
++---------------------------+
+
+ (B TYPE ENCODING)
+
++---------------------+
+| OPCODE   RD0   IMM  |
+| 7:0    13:8   31:9  |
++---------------------+
+
+** OPCODES **
+
+--------------------------------
+0x00  : NO-OPERATION  [N/A]
+0x01  : SUB IMM       [B-TYPE]
+0x02  : SUB REG       [A-TYPE]
+0x03  : ADD IMM       [B-TYPE]
+0x04  : ADD REG       [A-TYPE]
+0x05  : ADD IMM       [B-TYPE]
+--------------------------------
