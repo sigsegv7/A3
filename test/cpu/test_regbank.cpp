@@ -28,6 +28,12 @@ int main(int argc, char** argv, char** env)
             rbk->reset = 1;
         }
 
+        /* Set some registers on the 4th clock */
+        if (i == 4) {
+            rbk->g0_in = 0xDEADBEEF;
+            rbk->g1_in = 0x0CACACA7;
+        }
+
         rbk->eval();
         m_trace->dump(i);
         rbk->clk ^= 1;
