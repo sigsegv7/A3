@@ -39,4 +39,5 @@ TTBR:    : Translation Table Base Register
 0x03  : ADD IMM       [B-TYPE]
 0x04  : ADD REG       [A-TYPE]
 0x05  : ADD IMM       [B-TYPE]
+0x06  : HLT           [N/A]
 --------------------------------
