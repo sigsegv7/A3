@@ -7,7 +7,6 @@ compact and introspectable.
 
 ** REGISTERS **
 
-ZERO     : Always zero register
 SP       : Stack pointer
 FP       : Frame pointer
 G0 - G15 : General purpose
