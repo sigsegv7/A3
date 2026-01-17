@@ -9,6 +9,36 @@
 #include "a3vm/cpu.h"
 #include "a3vm/board.h"
 
+static int
+cpu_fetch(struct cpu_desc *desc, struct mainboard *mbp, inst_t *res)
+{
+    struct cpu_regs *regs;
+    int error;
+
+    if (desc == NULL || mbp == NULL) {
+        return -1;
+    }
+
+    if (res == NULL) {
+        return -1;
+    }
+
+    regs = &desc->regs;
+    error = mainboard_ram_read(
+        mbp,
+        regs->ip,
+        res,
+        4
+    );
+
+    if (error < 0) {
+        perror("mainboard_ram_read");
+        return -1;
+    }
+
+    return 0;
+}
+
 int
 cpu_power_up(struct cpu_desc *desc)
 {
@@ -59,7 +89,6 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
     struct cpu_regs *regs;
     uint8_t opcode;
     inst_t inst;
-    int error;
     size_t cycle = 0;
 
     if (desc == NULL) {
@@ -69,15 +98,7 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
 
     regs = &desc->regs;
     while (regs->ip < MAXIMUM_MEMORY) {
-        error = mainboard_ram_read(
-            mbp,
-            regs->ip,
-            &inst,
-            4
-        );
-
-        if (error < 0) {
-            perror("mainboard_ram_read");
+        if (cpu_fetch(desc, mbp, &inst) < 0) {
             return -1;
         }
 
