@@ -12,6 +12,12 @@ FP       : Frame pointer
 G0 - G15 : General purpose
 TTBR:    : Translation Table Base Register
 
+** Machine power-up state **
+
+Upon power up, the bootstrap A3 core shall be the only processor that is up and
+running with its registers initialized to zero. Its instruction pointer shall be
+also initialized to 0x000000 which is mapped to SPI-flash containing the platform
+firmware. This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 
 ** Instruction encoding **
 
