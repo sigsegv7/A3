@@ -84,6 +84,34 @@ mainboard_ram_write(struct mainboard *mbp, uintptr_t addr, void *data,
     return 0;
 }
 
+int
+mainboard_ram_read(struct mainboard *mbp, uintptr_t addr, void *data,
+    size_t count)
+{
+    uint8_t *dest;
+
+    if (mbp == NULL || data == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if ((addr + count) >= MAXIMUM_MEMORY) {
+        errno = -EIO;
+        return -1;
+    }
+
+    if (ram_try_balloon(mbp, (addr + count)) < 0) {
+        errno = -EIO;
+        return -1;
+    }
+
+    dest = (uint8_t *)data;
+    for (size_t i = 0; i < count; ++i) {
+        dest[i] = mbp->ram[addr + i];
+    }
+    return 0;
+}
+
 void
 mainboard_power_off(struct mainboard *mbp)
 {

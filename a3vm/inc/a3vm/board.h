@@ -52,6 +52,19 @@ int mainboard_ram_write(
 );
 
 /*
+ * Read mainboard RAM into a buffer
+ *
+ * @mbp:  Mainboard descriptor
+ * @addr: Address to read from
+ * @data: Buffer to read into
+ * @count: Number of bytes to read
+ */
+int mainboard_ram_read(
+    struct mainboard *mbp, uintptr_t addr,
+    void *data, size_t count
+);
+
+/*
  * Allocate all resources associated with a mainboard
  * emulation context
  *
