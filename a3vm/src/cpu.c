@@ -5,8 +5,27 @@
 
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 #include "a3vm/cpu.h"
 #include "a3vm/board.h"
+
+int
+cpu_power_up(struct cpu_desc *desc)
+{
+    struct cpu_regs *regs;
+
+    if (desc == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    regs = &desc->regs;
+    regs->ip = 0x00;
+    regs->sp = 0x00;
+    regs->fp = 0x00;
+    memset(regs->gpreg, 0xFFFFFFFF, sizeof(regs->gpreg));
+    return 0;
+}
 
 void
 cpu_dump(struct cpu_desc *desc)

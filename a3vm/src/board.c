@@ -50,6 +50,7 @@ mainboard_init(struct mainboard *mbp)
         return -1;
     }
 
+    cpu_power_up(&mbp->cpus[0]);
     printf("[*] bsp up\n");
     cpu_dump(&mbp->cpus[0]);
     return 0;

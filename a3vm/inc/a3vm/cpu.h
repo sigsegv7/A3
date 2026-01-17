@@ -61,6 +61,15 @@ struct cpu_desc {
 };
 
 /*
+ * Initialize a processor descriptor
+ *
+ * @desc: Descriptor to initialize
+ *
+ * Returns zero on success
+ */
+int cpu_power_up(struct cpu_desc *desc);
+
+/*
  * Begin processor execution
  *
  * @desc: Processor descriptor

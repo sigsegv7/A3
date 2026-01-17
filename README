@@ -15,9 +15,10 @@ TTBR:    : Translation Table Base Register
 ** Machine power-up state **
 
 Upon power up, the bootstrap A3 core shall be the only processor that is up and
-running with its registers initialized to zero. Its instruction pointer shall be
-also initialized to 0x000000 which is mapped to SPI-flash containing the platform
-firmware. This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
+running, all general purpose registers are to be initialized to all 1s. The stack
+and frame pointer registers are to be zeroed. The instruction pointer shall be
+initialized to 0x000000 which is mapped to SPI-flash containing the platform firmware.
+This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 
 ** Instruction encoding **
 
