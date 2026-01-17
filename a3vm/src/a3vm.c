@@ -104,6 +104,7 @@ vm_run(void)
         goto done;
     }
 
+    printf("[*] firmware loaded\n");
     dump_ram(&board);
 done:
     munmap(fw_buf, fw_size);

@@ -3,12 +3,14 @@
  * Provided under the BSD-3 clause.
  */
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 #include "a3vm/board.h"
+#include "a3vm/cpu.h"
 
 static inline int
 ram_try_balloon(struct mainboard *mbp, uintptr_t addr)
@@ -48,6 +50,8 @@ mainboard_init(struct mainboard *mbp)
         return -1;
     }
 
+    printf("[*] bsp up\n");
+    cpu_dump(&mbp->cpus[0]);
     return 0;
 }
 
