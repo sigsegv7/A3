@@ -61,7 +61,7 @@ mainboard_ram_write(struct mainboard *mbp, uintptr_t addr, void *data,
 {
     uint8_t *src;
 
-    if (mbp == NULL) {
+    if (mbp == NULL || data == NULL) {
         errno = -EINVAL;
         return -1;
     }
