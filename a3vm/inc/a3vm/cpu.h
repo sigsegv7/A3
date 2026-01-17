@@ -9,7 +9,30 @@
 #include <stdint.h>
 #include <stddef.h>
 
+/* Runtime parameters */
 #define N_GPREG 16
+
+/* Valid opcodes */
+#define OPCODE_NOP      0x00    /* No-operation */
+#define OPCODE_HLT      0x06    /* Halt */
+
+/* Forward declaration */
+struct mainboard;
+
+/*
+ * Represents a single instruction
+ */
+typedef union {
+    struct {
+        uint8_t opcode;
+        uint8_t operand[3];
+    };
+    uint32_t raw;
+} inst_t;
+
+/* Instruction access helpers */
+#define inst_op(inst)  ((inst)->opcode)
+#define inst_raw(inst) ((inst)->raw)
 
 /*
  * Represents processor registers
@@ -36,6 +59,14 @@ struct cpu_desc {
     uint8_t id;
     struct cpu_regs regs;
 };
+
+/*
+ * Begin processor execution
+ *
+ * @desc: Processor descriptor
+ * @mbp:  Mainboard descriptor
+ */
+int cpu_run(struct cpu_desc *desc, struct mainboard *mbp);
 
 /*
  * Dump information relating to a processor descriptor

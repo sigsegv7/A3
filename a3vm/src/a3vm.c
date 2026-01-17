@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "a3vm/board.h"
+#include "a3vm/cpu.h"
 
 #define A3VM_VERSION "0.0.1"
 
@@ -106,6 +107,9 @@ vm_run(void)
 
     printf("[*] firmware loaded\n");
     dump_ram(&board);
+
+    printf("[*] bsp started\n");
+    cpu_run(&board.cpus[0], &board);
 done:
     munmap(fw_buf, fw_size);
     close(fw_fd);
