@@ -54,3 +54,31 @@ This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 0x05  : ADD IMM       [B-TYPE]
 0x06  : HLT           [C-TYPE]
 --------------------------------
+
+** Register encoding **
+
+----------------
+0x00 : Reserved
+0x01 : G1
+0x02 : G2
+0x03 : G3
+0x04 : G4
+0x05 : G4
+0x06 : G5
+0x07 : G6
+0x08 : G7
+0x09 : G8
+0x0A : G9
+0x0B : G10
+0x0C : G11
+0x0D : G12
+0x0E : G13
+0x0F : G14
+0x10 : G15
+0x12 : Reserved
+0x13 : Reserved
+0x14 : Reserved
+0x15 : Reserved
+0x16 : FP
+0x17 : SP
+----------------
