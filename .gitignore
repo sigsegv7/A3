@@ -1,3 +1,5 @@
 *.o
 *.d
+*.vcd
+obj_dir/
 /a3vm/a3vm
