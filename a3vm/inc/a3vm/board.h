@@ -39,7 +39,7 @@ struct mainboard {
 int mainboard_init(struct mainboard *mbp);
 
 /*
- * Write a single byte of memory to mainboard RAM
+ * Write a buffer into mainboard RAM
  *
  * @mbp:  Mainboard descriptor
  * @addr: Address to write to
