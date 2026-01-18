@@ -4,18 +4,18 @@
 //
 
 module alu #(
-    parameter ALU_ADD = 4'b0000,
-    parameter ALU_SUB = 4'b0001
+    parameter ALU_SUB_IMM = 8'h01,
+    parameter ALU_ADD_IMM = 8'h03
 ) (
     input  logic [7:0] operand_0,
     input  logic [7:0] operand_1,
-    input logic  [3:0] opcode,
+    input logic  [7:0] opcode,
     output wire [7:0] result
 );
     always_comb begin
         case (opcode)
-            ALU_ADD: result = operand_0 + operand_1;
-            ALU_SUB: result = operand_0 - operand_1;
+            ALU_ADD_IMM: result = operand_0 + operand_1;
+            ALU_SUB_IMM: result = operand_0 - operand_1;
             default: result = 0;
         endcase
     end
