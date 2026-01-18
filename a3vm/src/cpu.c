@@ -39,6 +39,51 @@ cpu_fetch(struct cpu_desc *desc, struct mainboard *mbp, inst_t *res)
     return 0;
 }
 
+/*
+ * Handle the immediate mov instruction
+ */
+static int
+cpu_imov(struct cpu_desc *cpu, inst_t *inst)
+{
+    struct cpu_regs *regs;
+    uint8_t rd;
+    uint32_t imm;
+
+    if (cpu == NULL || inst == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if (inst_op(inst) != OPCODE_IMOV) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    regs = &cpu->regs;
+    rd = (inst_raw(inst) >> 8) & 0xFF;
+    imm = (inst_raw(inst) >> 16) & 0xFFFF;
+
+    /* Is this a general purpose register? */
+    if (rd >= REG_G0 && rd <= REG_G15) {
+        regs->gpreg[rd - 1] = imm;
+        return 0;
+    }
+
+    switch (rd) {
+    case REG_SP:
+        regs->sp = imm;
+        break;
+    case REG_FP:
+        regs->fp = imm;
+        break;
+    default:
+        printf("[!] decoded bad register %x\n", rd);
+        return -1;
+    }
+
+    return 0;
+}
+
 int
 cpu_power_up(struct cpu_desc *desc)
 {
@@ -111,6 +156,13 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
             printf("[*] processor %d halted\n", desc->id);
             ++regs->ip;
             return 0;
+        case OPCODE_IMOV:
+            if (cpu_imov(desc, &inst) < 0) {
+                return -1;
+            }
+
+            regs->ip += 4;
+            break;
         default:
             printf("[!] bad opcode %x\n", opcode);
             return -1;

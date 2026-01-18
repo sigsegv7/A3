@@ -15,9 +15,35 @@
 /* Valid opcodes */
 #define OPCODE_NOP      0x00    /* No-operation */
 #define OPCODE_HLT      0x06    /* Halt */
+#define OPCODE_IMOV     0x07    /* Move IMM */
 
 /* Forward declaration */
 struct mainboard;
+
+/*
+ * Valid registers
+ */
+typedef enum {
+    REG_G0,
+    REG_G1,
+    REG_G2,
+    REG_G3,
+    REG_G4,
+    REG_G5,
+    REG_G6,
+    REG_G7,
+    REG_G8,
+    REG_G9,
+    REG_G10,
+    REG_G11,
+    REG_G12,
+    REG_G13,
+    REG_G14,
+    REG_G15,
+    REG_FP = 0x16,
+    REG_SP,
+    REG_MAX
+} reg_t;
 
 /*
  * Represents a single instruction
