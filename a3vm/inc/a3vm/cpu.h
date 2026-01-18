@@ -16,6 +16,9 @@
 #define OPCODE_NOP      0x00    /* No-operation */
 #define OPCODE_HLT      0x06    /* Halt */
 #define OPCODE_IMOV     0x07    /* Move IMM */
+#define OPCODE_IOR      0x08    /* OR IMM */
+#define OPCODE_IAND     0x0A    /* AND IMM */
+#define OPCODE_IXOR     0x0D    /* XOR IMM */
 
 /* Forward declaration */
 struct mainboard;

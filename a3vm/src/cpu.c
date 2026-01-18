@@ -40,45 +40,57 @@ cpu_fetch(struct cpu_desc *desc, struct mainboard *mbp, inst_t *res)
 }
 
 /*
- * Handle the immediate mov instruction
+ * Perform a btype IMM operation
  */
 static int
-cpu_imov(struct cpu_desc *cpu, inst_t *inst)
+cpu_btype_iop(struct cpu_desc *cpu, inst_t *inst)
 {
     struct cpu_regs *regs;
-    uint8_t rd;
+    uint8_t opcode, rd;
     uint32_t imm;
+    uint64_t tmp;
 
     if (cpu == NULL || inst == NULL) {
         errno = -EINVAL;
         return -1;
     }
 
-    if (inst_op(inst) != OPCODE_IMOV) {
-        errno = -EINVAL;
-        return -1;
-    }
-
     regs = &cpu->regs;
+    opcode = inst_op(inst);
     rd = (inst_raw(inst) >> 8) & 0xFF;
     imm = (inst_raw(inst) >> 16) & 0xFFFF;
 
-    /* Is this a general purpose register? */
+    /* Read the correct register */
     if (rd >= REG_G0 && rd <= REG_G15) {
-        regs->gpreg[rd - 1] = imm;
-        return 0;
+        tmp = regs->gpreg[rd];
+    } else if (rd == REG_SP) {
+        tmp = regs->sp;
+    } else if (rd == REG_FP) {
+        tmp = regs->fp;
     }
 
-    switch (rd) {
-    case REG_SP:
-        regs->sp = imm;
+    switch (opcode) {
+    case OPCODE_IOR:
+        tmp |= imm;
         break;
-    case REG_FP:
-        regs->fp = imm;
+    case OPCODE_IAND:
+        tmp &= imm;
         break;
-    default:
-        printf("[!] decoded bad register %x\n", rd);
-        return -1;
+    case OPCODE_IXOR:
+        tmp ^= imm;
+        break;
+    case OPCODE_IMOV:
+        tmp = imm;
+        break;
+    }
+
+    /* Write the correct register */
+    if (rd >= REG_G0 && rd <= REG_G15) {
+        regs->gpreg[rd] = tmp;
+    } else if (rd == REG_SP) {
+        regs->sp = tmp;
+    } else if (rd == REG_FP) {
+        regs->fp = tmp;
     }
 
     return 0;
@@ -156,8 +168,11 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
             printf("[*] processor %d halted\n", desc->id);
             ++regs->ip;
             return 0;
+        case OPCODE_IOR:
+        case OPCODE_IXOR:
+        case OPCODE_IAND:
         case OPCODE_IMOV:
-            if (cpu_imov(desc, &inst) < 0) {
+            if (cpu_btype_iop(desc, &inst) < 0) {
                 return -1;
             }
 
