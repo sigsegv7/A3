@@ -1,0 +1,26 @@
+-- THE A3 PROCESSOR INTERNALS MANUAL --
+
+** Scope **
+
+The scope of this manual is to describe the processor internals to those
+assisting with the development of the architecture. This manual is to describe
+the hardware interactions and inner-workings. Software interfaces related to the
+described elements are not in scope of this manual.
+
+** Arithmetic logic unit **
+
+The arithmetic logic unit (ALU) is a circuit within the processor whose job is to
+take two operands and perfor a specific operation upon them. The ALU has its own set
+of opcodes for the purpose of defragmentation.
+
+(OPCODES)
+------------------------------
+0x00 : ADD
+0x01 : SUB
+0x02 : RESERVED FOR FUTURE USE
+0x03 : RESERVED FOR FUTURE USE
+0x04 : OR
+0x05 : AND
+0x06 : XOR
+0x07 : RESERVED FOR FUTURE USE
+------------------------------
