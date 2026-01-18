@@ -49,7 +49,6 @@ assemble(const char *path)
     }
 
     if (parser_parse(&state) < 0) {
-        perror("parser_parse");
         return -1;
     }
 
