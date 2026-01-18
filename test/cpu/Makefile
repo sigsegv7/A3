@@ -1,7 +1,8 @@
 SV_FILES =						\
 	../../hdl/cpu/domain.sv		\
 	../../hdl/cpu/alu.sv 		\
-	../../hdl/cpu/regbank.sv
+	../../hdl/cpu/regbank.sv	\
+	../../hdl/cpu/ctl.sv        \
 
 TB_FILES =				\
 	test_core.cpp
