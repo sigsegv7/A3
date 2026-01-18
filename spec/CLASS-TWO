@@ -15,12 +15,13 @@ of opcodes for the purpose of defragmentation.
 
 (OPCODES)
 ------------------------------
-0x00 : ADD
-0x01 : SUB
-0x02 : RESERVED FOR FUTURE USE
+0x00 : NOP
+0x01 : ADD
+0x02 : SUB
 0x03 : RESERVED FOR FUTURE USE
-0x04 : OR
-0x05 : AND
-0x06 : XOR
-0x07 : RESERVED FOR FUTURE USE
+0x04 : RESERVED FOR FUTURE USE
+0x05 : OR
+0x06 : AND
+0x07 : XOR
+0x08 : RESERVED FOR FUTURE USE
 ------------------------------
