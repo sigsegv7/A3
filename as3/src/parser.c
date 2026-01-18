@@ -33,6 +33,7 @@
  * into human readable values
  */
 static const char *toktab[] = {
+    [TT_NONE]       = symtok("none"),
     [TT_COMMA]      = qtok(","),
     [TT_G0]         = qtok("g0"),
     [TT_G1]         = qtok("g1"),

@@ -13,6 +13,7 @@
  * Represents valid token types
  */
 typedef enum {
+    TT_NONE,    /* <NONE> */
     TT_COMMA,   /* ','   */
     TT_G0,      /* 'g0'  */
     TT_G1,      /* 'g1'  */
