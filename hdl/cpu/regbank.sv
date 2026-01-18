@@ -5,30 +5,38 @@
 
 module regbank #(
     parameter GP_RESET_VALUE = 64'hFFFFFFFFFFFFFFFF,
-    parameter STACK_RESET_VALUE = 64'h0
-) (
-    input logic [63:0] g0_in, input logic [63:0] g1_in,
-    input logic [63:0] g2_in, input logic [63:0] g3_in,
-    input logic [63:0] g4_in, input logic [63:0] g5_in,
-    input logic [63:0] g6_in, input logic [63:0] g7_in,
-    input logic [63:0] g8_in, input logic [63:0] g9_in,
-    input logic [63:0] g10_in, input logic [63:0] g11_in,
-    input logic [63:0] g12_in, input logic [63:0] g13_in,
-    input logic [63:0] g14_in, input logic [63:0] g15_in,
-    input logic [63:0] fp_in, input logic [63:0] sp_in,
+    parameter STACK_RESET_VALUE = 64'h0,
 
-    output logic [63:0] g0, output logic [63:0] g1,
-    output logic [63:0] g2, output logic [63:0] g3,
-    output logic [63:0] g4, output logic [63:0] g5,
-    output logic [63:0] g6, output logic [63:0] g7,
-    output logic [63:0] g8, output logic [63:0] g9,
-    output logic [63:0] g10, output logic [63:0] g11,
-    output logic [63:0] g12, output logic [63:0] g13,
-    output logic [63:0] g14, output logic [63:0] g15,
-    output logic [63:0] fp, output logic [63:0] sp,
+    // Register values
+    parameter REG_G0 = 6'h00,  parameter REG_G1  = 6'h01,
+    parameter REG_G2 = 6'h02,  parameter REG_G3  = 6'h03,
+    parameter REG_G4 = 6'h04,  parameter REG_G5  = 6'h05,
+    parameter REG_G6 = 6'h06,  parameter REG_G7  = 6'h07,
+    parameter REG_G8 = 6'h08,  parameter REG_G9  = 6'h09,
+    parameter REG_G10 = 6'h0A, parameter REG_G11 = 6'h0B,
+    parameter REG_G12 = 6'h0C, parameter REG_G13 = 6'h0D,
+    parameter REG_G14 = 6'h0E, parameter REG_G15 = 6'h0F,
+    parameter REG_FP = 6'h16,  parameter REG_SP  = 6'h17
+) (
+    // Register select, value and write enable line
+    input logic  [5:0]  regsel,
+    input logic  [63:0] reg_val,
+    input wire   reg_we,
+
     input wire clk,
     input wire reset
 );
+    /* verilator lint_off UNUSEDSIGNAL */
+    logic [63:0] g0;  logic [63:0] g1;
+    logic [63:0] g2;  logic [63:0] g3;
+    logic [63:0] g4;  logic [63:0] g5;
+    logic [63:0] g6;  logic [63:0] g7;
+    logic [63:0] g8;  logic [63:0] g9;
+    logic [63:0] g10; logic [63:0] g11;
+    logic [63:0] g12; logic [63:0] g13;
+    logic [63:0] g14; logic [63:0] g15;
+    logic [63:0] fp;  logic [63:0] sp;
+
     always @(posedge clk) begin
         if (reset) begin
             g0 <= GP_RESET_VALUE;
@@ -51,24 +59,29 @@ module regbank #(
             sp  <= STACK_RESET_VALUE;
         end
         else begin
-            g0 <= g0_in;
-            g1 <= g1_in;
-            g2 <= g2_in;
-            g3 <= g3_in;
-            g4 <= g4_in;
-            g5 <= g5_in;
-            g6 <= g6_in;
-            g7 <= g7_in;
-            g8 <= g8_in;
-            g9 <= g9_in;
-            g10 <= g10_in;
-            g11 <= g11_in;
-            g12 <= g12_in;
-            g13 <= g13_in;
-            g14 <= g14_in;
-            g15 <= g15_in;
-            fp  <= fp_in;
-            sp  <= sp_in;
+            if (reg_we) begin
+                case (regsel)
+                    REG_G0: g0 <= reg_val;
+                    REG_G1: g1 <= reg_val;
+                    REG_G2: g2 <= reg_val;
+                    REG_G3: g3 <= reg_val;
+                    REG_G4: g4 <= reg_val;
+                    REG_G5: g5 <= reg_val;
+                    REG_G6: g6 <= reg_val;
+                    REG_G7: g7 <= reg_val;
+                    REG_G8: g8 <= reg_val;
+                    REG_G9: g9 <= reg_val;
+                    REG_G10: g10 <= reg_val;
+                    REG_G11: g11 <= reg_val;
+                    REG_G12: g12 <= reg_val;
+                    REG_G13: g13 <= reg_val;
+                    REG_G14: g14 <= reg_val;
+                    REG_G15: g15 <= reg_val;
+                    REG_FP: fp <= reg_val;
+                    REG_SP: sp <= reg_val;
+                    default: ;
+                endcase
+            end
         end
     end
 endmodule
