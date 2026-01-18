@@ -4,9 +4,28 @@
  */
 
 #include <errno.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include "as3/lexer.h"
+#include "as3/ptrbox.h"
+
+/*
+ * Place a given character in the putback buffer
+ *
+ * @state: Assembler state
+ * @c:     Character to put in putback buffer
+ */
+static inline void
+lexer_putback(struct as3_state *state, char c)
+{
+    if (state == NULL) {
+        return;
+    }
+
+    state->lex_putback = c;
+}
 
 /*
  * Check if a character is a whitespace and return
@@ -46,6 +65,18 @@ lexer_consume(struct as3_state *state, bool skip_ws)
 
     if (state == NULL) {
         return '\0';
+    }
+
+    /*
+     * If there is something in the putback buffer for us to
+     * read, take it.
+     */
+    if ((c = state->lex_putback) != '\0') {
+        state->lex_putback = '\0';
+        if (lexer_is_ws(state, c) && !skip_ws)
+            return c;
+        if (!lexer_is_ws(state, c))
+            return c;
     }
 
     /* Scan and skip whitespace */

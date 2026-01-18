@@ -15,11 +15,13 @@
  * @in_fd:      Input source file fd
  * @last_token: Most previous token
  * @ptrbox:     Global pointer box
+ * @lex_putback Putback buffer to lexer
  */
 struct as3_state {
     int in_fd;
     struct token last_token;
     struct ptrbox ptrbox;
+    char lex_putback;
 };
 
 /*
