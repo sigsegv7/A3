@@ -91,6 +91,65 @@ lexer_consume(struct as3_state *state, bool skip_ws)
     return '\0';
 }
 
+/*
+ * Scan for an identifier token
+ *
+ * @state: Assembler state
+ * @lc:    Last character
+ * @res:   Token result
+ *
+ * Returns zero on success
+ */
+static int
+lexer_scan_ident(struct as3_state *state, int lc, struct token *res)
+{
+    char *buf;
+    size_t bufcap, bufsz;
+    char c;
+
+    if (state == NULL || res == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if (!isalpha(lc) && lc != '_') {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    bufcap = 8;
+    bufsz = 0;
+    if ((buf = malloc(bufcap)) == NULL) {
+        errno = -ENOMEM;
+        return -1;
+    }
+
+    buf[bufsz++] = lc;
+    for (;;) {
+        if ((c = lexer_consume(state, true)) == '\0') {
+            buf[bufsz] = '\0';
+            break;
+        }
+
+        if (!isalnum(c) && c != '_') {
+            lexer_putback(state, c);
+            buf[bufsz] = '\0';
+            break;
+        }
+
+        buf[bufsz++] = c;
+        if (bufsz >= bufcap - 1) {
+            bufcap += 8;
+            buf = realloc(buf, bufcap);
+        }
+    }
+
+    res->type = TT_IDENT;
+    res->s = ptrbox_strdup(&state->ptrbox, buf);
+    free(buf);
+    return 0;
+}
+
 int
 lexer_scan(struct as3_state *state, struct token *res)
 {
@@ -111,6 +170,12 @@ lexer_scan(struct as3_state *state, struct token *res)
         res->type = TT_COMMA;
         res->c = c;
         return 0;
+    default:
+        if (lexer_scan_ident(state, c, res) == 0) {
+            return 0;
+        }
+
+        break;
     }
 
     return -1;

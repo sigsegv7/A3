@@ -11,9 +11,18 @@
 #include "as3/parser.h"
 #include "as3/token.h"
 
+/* Obtain most previous token */
+#define curtok(state) \
+    (&(state)->last_token)
+
 /* Quoted token entry */
 #define qtok(str) \
     "'" str "'"
+
+/* Symbolic token entry */
+#define symtok(str) \
+    "<" str ">"
+
 
 /* Convert token to string */
 #define tokstr(tok) \
@@ -40,19 +49,26 @@ static const char *toktab[] = {
     [TT_G12]        = qtok("g12"),
     [TT_G13]        = qtok("g13"),
     [TT_G14]        = qtok("g14"),
-    [TT_G15]        = qtok("g15")
+    [TT_G15]        = qtok("g15"),
+    [TT_IDENT]      = symtok("ident")
 };
 
 int
 parser_parse(struct as3_state *state)
 {
+    struct token *tok;
+
     if (state == NULL) {
         errno = -EINVAL;
         return -1;
     }
 
     while (lexer_scan(state, &state->last_token) == 0) {
-        printf("got token %s\n", tokstr(&state->last_token));
+        tok = curtok(state);
+        printf("got token %s\n", tokstr(tok));
+        if (tok->type == TT_IDENT) {
+            printf("identifier: %s\n", tok->s);
+        }
     }
 
     return 0;
