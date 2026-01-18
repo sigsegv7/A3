@@ -38,7 +38,6 @@ static inline bool
 lexer_is_ws(struct as3_state *state, char c)
 {
     switch (c) {
-    case '\n':
     case '\r':
     case '\t':
     case '\f':
@@ -166,6 +165,10 @@ lexer_scan(struct as3_state *state, struct token *res)
     }
 
     switch (c) {
+    case '\n':
+        res->type = TT_NEWLINE;
+        res->c = c;
+        return 0;
     case ',':
         res->type = TT_COMMA;
         res->c = c;
