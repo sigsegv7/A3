@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include "as3/state.h"
+#include "as3/parser.h"
 
 #define AS3_VERSION "0.0.1"
 
@@ -44,6 +45,11 @@ assemble(const char *path)
 
     if (as3_state_init(&state, path) < 0) {
         perror("as3_state_init");
+        return -1;
+    }
+
+    if (parser_parse(&state) < 0) {
+        perror("parser_parse");
         return -1;
     }
 

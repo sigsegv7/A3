@@ -6,13 +6,17 @@
 #ifndef AS3_STATE_H
 #define AS3_STATE_H 1
 
+#include "as3/token.h"
+
 /*
  * Represents the assembler state
  *
- * @in_fd: Input source file fd
+ * @in_fd:      Input source file fd
+ * @last_token: Most previous token
  */
 struct as3_state {
     int in_fd;
+    struct token last_token;
 };
 
 /*
