@@ -7,16 +7,19 @@
 #define AS3_STATE_H 1
 
 #include "as3/token.h"
+#include "as3/ptrbox.h"
 
 /*
  * Represents the assembler state
  *
  * @in_fd:      Input source file fd
  * @last_token: Most previous token
+ * @ptrbox:     Global pointer box
  */
 struct as3_state {
     int in_fd;
     struct token last_token;
+    struct ptrbox ptrbox;
 };
 
 /*

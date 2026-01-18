@@ -22,6 +22,11 @@ as3_state_init(struct as3_state *state, const char *path)
         return -1;
     }
 
+    if (ptrbox_init(&state->ptrbox) < 0) {
+        close(state->in_fd);
+        return -1;
+    }
+
     return 0;
 }
 
@@ -33,4 +38,5 @@ as3_state_destroy(struct as3_state *state)
     }
 
     close(state->in_fd);
+    ptrbox_destroy(&state->ptrbox);
 }
