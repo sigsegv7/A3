@@ -10,7 +10,7 @@ described elements are not in scope of this manual.
 ** Arithmetic logic unit **
 
 The arithmetic logic unit (ALU) is a circuit within the processor whose job is to
-take two operands and perfor a specific operation upon them. The ALU has its own set
+take two operands and perform a specific operation upon them. The ALU has its own set
 of opcodes for the purpose of defragmentation.
 
 (OPCODES)
