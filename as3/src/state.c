@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 #include "as3/state.h"
 
 int
@@ -17,6 +18,7 @@ as3_state_init(struct as3_state *state, const char *path)
         return -1;
     }
 
+    memset(state, 0, sizeof(*state));
     state->in_fd = open(path, O_RDONLY);
     if (state->in_fd < 0) {
         return -1;
