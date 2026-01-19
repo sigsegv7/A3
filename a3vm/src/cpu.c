@@ -60,6 +60,8 @@ cpu_reg_store(struct cpu_regs *regs, uint8_t rd, uint64_t v)
         regs->sp = v;
     } else if (rd == REG_FP) {
         regs->fp = v;
+    } else {
+        return -1;
     }
 
     return 0;
@@ -77,7 +79,7 @@ cpu_reg_store(struct cpu_regs *regs, uint8_t rd, uint64_t v)
 static int
 cpu_reg_load(struct cpu_regs *regs, uint8_t rs, uint64_t *res)
 {
-    uint64_t tmp = 0;
+    uint64_t tmp;
 
     if (res == NULL || rs >= REG_MAX) {
         return -1;
@@ -90,6 +92,8 @@ cpu_reg_load(struct cpu_regs *regs, uint8_t rs, uint64_t *res)
         tmp = regs->sp;
     } else if (rs == REG_FP) {
         tmp = regs->fp;
+    } else {
+        return -1;
     }
 
     *res = tmp;
