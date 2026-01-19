@@ -5,12 +5,13 @@
 
 module domain (
     input wire clk,
-    input wire reset,
-    output wire [7:0] alu_result
+    input wire reset
 );
     logic regbank_we;
     logic [5:0] regbank_sel;
     logic [63:0] regbank_val;
+    /* verilator lint_off UNUSEDSIGNAL */
+    logic [7:0] alu_result;
 
     alu alu (
         .operand_0(0),

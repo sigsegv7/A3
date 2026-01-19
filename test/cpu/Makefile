@@ -1,4 +1,5 @@
 SV_FILES =						\
+	../../hdl/soc/soc.sv		\
 	../../hdl/cpu/domain.sv		\
 	../../hdl/cpu/alu.sv 		\
 	../../hdl/cpu/regbank.sv	\
@@ -16,5 +17,5 @@ obj:
 
 .PHONY: vcd
 vcd:
-	make -C obj_dir/ -f Vdomain.mk Vdomain
-	./obj_dir/Vdomain
+	make -C obj_dir/ -f Vsoc.mk Vsoc
+	./obj_dir/Vsoc
