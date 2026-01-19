@@ -5,7 +5,12 @@
 
 module soc (
     input wire clk,
-    input wire reset
+    input wire reset,
+
+    input wire [2:0] utap_sel,
+    input wire utap_rx,
+
+    output wire utap_out
 );
     logic [7:0] bus_pool;
     logic [16:0] bus_addr;
@@ -18,6 +23,13 @@ module soc (
         .bus_in(bus_pool),
         .bus_we(bus_we),
         .bus_addr(bus_addr)
+    );
+
+    dbgctl dbg_unit (
+        .clk(clk),
+        .sel(utap_sel),
+        .dbg_rx(utap_rx),
+        .dbg_tx(utap_out)
     );
 
     busctl bus_unit (
