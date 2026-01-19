@@ -22,7 +22,9 @@ module domain (
 
     /* verilator lint_off UNUSEDSIGNAL */
     logic [7:0] alu_result;
-    logic [7:0] ctl_data_pool;
+    logic [7:0] ctl_read_pool;
+    logic [7:0] ctl_op_pool;
+    logic [63:0] ctl_write_pool;
 
     alu alu (
         .operand_0(0),
@@ -37,9 +39,16 @@ module domain (
         .clk(clk)
     );
 
+    pc pcntr (
+        .reset(reset), .clk(clk),
+        .bus_data_in(ctl_read_pool),
+        .ctl_op_out(ctl_op_pool),
+        .ctl_data_out(ctl_write_pool)
+    );
+
     ctl ctl_unit (
-        .ctl_op(0), .bus_in(bus_in),
-        .reg_sel(1), .data_in(0),
+        .ctl_op(ctl_op_pool), .bus_in(bus_in),
+        .reg_sel(1), .data_in(ctl_write_pool),
         .clk(clk),
         .bus_data_in(bus_in),
         .regbank_we(regbank_we),
@@ -47,7 +56,7 @@ module domain (
         .regbank_valout(regbank_val),
         .bus_we(ctl_bus_we),
         .addr_out(ctl_bus_addr),
-        .data_out(ctl_data_pool)
+        .data_out(ctl_read_pool)
     );
 
     // Latch the outputs per clock rising edge

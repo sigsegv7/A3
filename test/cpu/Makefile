@@ -3,6 +3,7 @@ SV_FILES =						\
 	../../hdl/soc/busctl.sv		\
 	../../hdl/chipset/memctl.sv	\
 	../../hdl/cpu/domain.sv		\
+	../../hdl/cpu/pc.sv			\
 	../../hdl/cpu/alu.sv 		\
 	../../hdl/cpu/regbank.sv	\
 	../../hdl/cpu/ctl.sv        \
