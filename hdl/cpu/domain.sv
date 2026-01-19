@@ -6,6 +6,7 @@
 module domain (
     input wire clk,
     input wire reset,
+    input wire pc_inhibit,
     input logic [7:0] bus_in,
 
     output logic bus_we,
@@ -40,6 +41,7 @@ module domain (
     );
 
     pc pcntr (
+        .pc_inhibit(pc_inhibit),
         .reset(reset), .clk(clk),
         .bus_data_in(ctl_read_pool),
         .ctl_op_out(ctl_op_pool),

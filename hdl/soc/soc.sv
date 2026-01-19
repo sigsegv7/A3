@@ -12,6 +12,7 @@ module soc (
     logic bus_we;
 
     domain cpu_domain0 (
+        .pc_inhibit(0),
         .clk(clk),
         .reset(reset),
         .bus_in(bus_pool),

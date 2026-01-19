@@ -9,6 +9,7 @@
 module pc #(
     parameter CTL_READ_ADDR = 8'h02
 ) (
+    input wire pc_inhibit,
     input wire reset,
     input wire clk,
     input logic [7:0] bus_data_in,
@@ -38,6 +39,8 @@ module pc #(
             default: ;
         endcase
 
-        pc <= pc + 4;
+        if (!pc_inhibit) begin
+            pc <= pc + 4;
+        end
     end
 endmodule
