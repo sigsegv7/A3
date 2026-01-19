@@ -8,17 +8,18 @@ module soc (
     input wire reset
 );
     /* verilator lint_off UNUSEDSIGNAL */
-    logic [7:0] mem_read_pool;
-
-    memctl mem_ctl (
-        .data_in(0),  .addr_in(0),
-        .write_en(0), .read_en(0),
-        .clk(clk),
-        .data_out(mem_read_pool)
-    );
+    logic [7:0] data_pool;
 
     domain cpu_domain0 (
         .clk(clk),
         .reset(reset)
+    );
+
+    busctl bus_unit (
+        .write_en(0),
+        .addr_in(0),
+        .data_in(0),
+        .clk(clk),
+        .data_out(data_pool)
     );
 endmodule

@@ -10,7 +10,6 @@ module memctl #(
     input logic [7:0] data_in,
     input logic [16:0] addr_in,
     input wire write_en,
-    input wire read_en,
     input wire clk,
 
     output logic [7:0] data_out
@@ -22,7 +21,7 @@ module memctl #(
         if (write_en) begin
             mbank[addr_in] <= data_in;
         end
-        else if (read_en) begin
+        else begin
             data_out <= mbank[addr_in];
         end
     end
