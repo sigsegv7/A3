@@ -14,6 +14,7 @@
 
 /* Valid opcodes */
 #define OPCODE_NOP      0x00    /* No-operation */
+#define OPCODE_IADD     0x03    /* ADD IMM */
 #define OPCODE_HLT      0x06    /* Halt */
 #define OPCODE_IMOV     0x07    /* Move IMM */
 #define OPCODE_IOR      0x08    /* OR IMM */

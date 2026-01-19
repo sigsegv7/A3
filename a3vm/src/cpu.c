@@ -146,6 +146,9 @@ cpu_btype_iop(struct cpu_desc *cpu, inst_t *inst)
     case OPCODE_IMOV:
         tmp = imm;
         break;
+    case OPCODE_IADD:
+        tmp += imm;
+        break;
     }
 
     return cpu_reg_store(regs, rd, tmp);
@@ -258,6 +261,7 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
         case OPCODE_IXOR:
         case OPCODE_IAND:
         case OPCODE_IMOV:
+        case OPCODE_IADD:
             if (cpu_btype_iop(desc, &inst) < 0) {
                 return -1;
             }
