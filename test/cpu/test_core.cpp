@@ -10,7 +10,7 @@
 #include "Vsoc.h"
 #include "Vsoc___024root.h"
 
-#define MAX_SIM_ITER 50
+#define MAX_SIM_ITER 100
 
 int main(int argc, char** argv, char** env)
 {
@@ -37,7 +37,7 @@ int main(int argc, char** argv, char** env)
             soc->utap_rx = 1;
             soc->utap_sel = 1;
             break;
-        case 35:
+        case 49:
             soc->utap_sel = 0;
             break;
         }

@@ -16,7 +16,10 @@ module dbgctl #(
     input logic dbg_rx,
 
     // Board's RX, we send data out
-    output logic dbg_tx
+    output logic dbg_tx,
+
+    // Control lines
+    output wire pc_inhibit_out
 );
     /* verilator lint_off UNUSEDSIGNAL */
     logic [15:0] sel_reg;
@@ -31,10 +34,9 @@ module dbgctl #(
             n_bits <= n_bits + 1;
         end
 
-        // TODO: Tap the program counter
         if (n_bits == 16) begin
             case (sel_reg)
-                UTAP_PC: ;
+                UTAP_PC: pc_inhibit_out <= shift_reg[0];
                 default: ;
             endcase
 

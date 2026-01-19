@@ -12,12 +12,13 @@ module soc (
 
     output wire utap_out
 );
+    logic pc_inhibit;
     logic [7:0] bus_pool;
     logic [16:0] bus_addr;
     logic bus_we;
 
     domain cpu_domain0 (
-        .pc_inhibit(0),
+        .pc_inhibit(pc_inhibit),
         .clk(clk),
         .reset(reset),
         .bus_in(bus_pool),
@@ -29,7 +30,8 @@ module soc (
         .clk(clk),
         .sel(utap_sel),
         .dbg_rx(utap_rx),
-        .dbg_tx(utap_out)
+        .dbg_tx(utap_out),
+        .pc_inhibit_out(pc_inhibit)
     );
 
     busctl bus_unit (
