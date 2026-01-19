@@ -11,6 +11,7 @@
 #include "as3/parser.h"
 #include "as3/token.h"
 #include "as3/trace.h"
+#include "as3/reg.h"
 
 /* Obtain most previous token */
 #define curtok(state) \
@@ -86,45 +87,12 @@ static const char *toktab[] = {
 };
 
 /*
- * Returns true if the given token is a general
- * purpose register
- */
-static inline bool
-parse_is_gpreg(struct token *tok)
-{
-    switch (tok->type) {
-    case TT_G0:
-    case TT_G1:
-    case TT_G2:
-    case TT_G3:
-    case TT_G4:
-    case TT_G5:
-    case TT_G6:
-    case TT_G7:
-    case TT_G8:
-    case TT_G9:
-    case TT_G10:
-    case TT_G11:
-    case TT_G12:
-    case TT_G13:
-    case TT_G14:
-    case TT_G15:
-    case TT_ZERO:
-        return true;
-    default:
-        return false;
-    }
-
-    return false;
-}
-
-/*
  * Returns true if the given token any register
  */
 static inline bool
 parse_is_reg(struct token *tok)
 {
-    if (parse_is_gpreg(tok)) {
+    if (token_to_reg(tok->type) != REG_BAD) {
         return true;
     }
 
