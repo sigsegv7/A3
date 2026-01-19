@@ -9,7 +9,6 @@
 #include "as3/token.h"
 
 typedef enum {
-    REG_BAD,
     REG_G0, REG_G1,
     REG_G2, REG_G3,
     REG_G4, REG_G5,
@@ -18,7 +17,9 @@ typedef enum {
     REG_G10, REG_G11,
     REG_G12, REG_G13,
     REG_G14, REG_G15,
-    REG_ZERO
+    REG_ZERO,
+    REG_MAX,
+    REG_BAD = 0xFF
 } reg_t;
 
 static inline reg_t

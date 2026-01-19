@@ -24,6 +24,12 @@ as3_state_init(struct as3_state *state, const char *path)
         return -1;
     }
 
+    state->out_fd = open(OUTPUT_FILENAME, O_WRONLY | O_CREAT, 0600);
+    if (state->out_fd < 0) {
+        close(state->in_fd);
+        return -1;
+    }
+
     if (ptrbox_init(&state->ptrbox) < 0) {
         close(state->in_fd);
         return -1;
@@ -40,5 +46,6 @@ as3_state_destroy(struct as3_state *state)
     }
 
     close(state->in_fd);
+    close(state->out_fd);
     ptrbox_destroy(&state->ptrbox);
 }

@@ -9,6 +9,8 @@
 #include "as3/token.h"
 #include "as3/ptrbox.h"
 
+#define OUTPUT_FILENAME "as3.bin"
+
 /*
  * Represents the assembler state
  *
@@ -16,12 +18,14 @@
  * @last_token: Most previous token
  * @ptrbox:     Global pointer box
  * @lex_putback Putback buffer to lexer
+ * @out_fd:     Output file descriptor
  */
 struct as3_state {
     int in_fd;
     struct token last_token;
     struct ptrbox ptrbox;
     char lex_putback;
+    int out_fd;
 };
 
 /*

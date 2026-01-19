@@ -9,12 +9,14 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "as3/state.h"
+#include "as3/reg.h"
 
 /*
  * Represents valid AST node types
  */
 typedef enum {
     AST_MOV,
+    AST_REG,
 } ast_type_t;
 
 /*
@@ -28,6 +30,9 @@ struct ast_node {
     ast_type_t type;
     struct ast_node *left;
     struct ast_node *right;
+    union {
+        reg_t reg;
+    };
 };
 
 /*
