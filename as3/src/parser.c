@@ -56,6 +56,24 @@ static const char *toktab[] = {
     [TT_ZERO]       = qtok("zero")
 };
 
+/*
+ * Calls into the lexer for a single token
+ *
+ * @state: Assembler state
+ * @tok:   Last token
+ *
+ * Returns zero on success
+ */
+static inline int
+parse_scan(struct as3_state *state, struct token *tok)
+{
+    if (state == NULL || tok == NULL) {
+        return -1;
+    }
+
+    return lexer_scan(state, tok);
+}
+
 int
 parser_parse(struct as3_state *state)
 {
@@ -66,7 +84,7 @@ parser_parse(struct as3_state *state)
         return -1;
     }
 
-    while (lexer_scan(state, &state->last_token) == 0) {
+    while (parse_scan(state, &state->last_token) == 0) {
         tok = curtok(state);
         printf("got token %s\n", tokstr(tok));
         if (tok->type == TT_IDENT) {
