@@ -23,7 +23,6 @@
 #define symtok(str) \
     "<" str ">"
 
-
 /* Convert token to string */
 #define tokstr(tok) \
     (toktab[(tok)->type])
