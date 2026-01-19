@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include "as3/lexer.h"
@@ -149,6 +150,105 @@ lexer_scan_ident(struct as3_state *state, int lc, struct token *res)
     return 0;
 }
 
+/*
+ * Check an indentifier token against a list of general purpose
+ * registers and override the type if it matches.
+ *
+ * @tok:   Token to check
+ *
+ * Returns zero on success
+ */
+static int
+lexer_gpreg(struct token *tok)
+{
+    uint8_t reg_num;
+    char *p;
+    tt_t reg_lookup[] = {
+        TT_G0,   TT_G1,
+        TT_G2,   TT_G3,
+        TT_G4,   TT_G5,
+        TT_G6,   TT_G7,
+        TT_G8,   TT_G9,
+        TT_G10,  TT_G11,
+        TT_G12,  TT_G13,
+        TT_G14,  TT_G15
+    };
+
+    if (tok == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if (tok->type != TT_IDENT) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    /* Is this actual a general purpose register? */
+    p = tok->s;
+    if (*(p++) != 'g') {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    /*
+     * atoi() returns zero on error so we need to check if we
+     * actually have an error or just register g0.
+     */
+    reg_num = atoi(p);
+    if (reg_num == 0) {
+        if (strcmp(tok->s, "g0") == 0) {
+            tok->type = TT_G0;
+            return 0;
+        }
+
+        errno = -EINVAL;
+        return -1;
+    }
+
+    /* There are only 16 gpregs */
+    if (reg_num > 15) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    tok->type = reg_lookup[reg_num];
+    return 0;
+}
+
+/*
+ * Check an indentifier token against a list of known keywords
+ * and override the type if it matches.
+ *
+ * @tok:   Token to check
+ *
+ * Returns zero on success
+ */
+static int
+lexer_kw(struct token *tok)
+{
+    if (tok == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if (tok->type != TT_IDENT) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    switch (*tok->s) {
+    case 'g':
+        if (lexer_gpreg(tok) == 0) {
+            return 0;
+        }
+
+        break;
+    }
+
+    return 0;
+}
+
 int
 lexer_scan(struct as3_state *state, struct token *res)
 {
@@ -175,6 +275,7 @@ lexer_scan(struct as3_state *state, struct token *res)
         return 0;
     default:
         if (lexer_scan_ident(state, c, res) == 0) {
+            lexer_kw(res);
             return 0;
         }
 
