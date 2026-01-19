@@ -126,7 +126,7 @@ lexer_scan_ident(struct as3_state *state, int lc, struct token *res)
 
     buf[bufsz++] = lc;
     for (;;) {
-        if ((c = lexer_consume(state, true)) == '\0') {
+        if ((c = lexer_consume(state, false)) == '\0') {
             buf[bufsz] = '\0';
             break;
         }
