@@ -16,7 +16,7 @@ module ctl #(
 
     input wire [7:0]  ctl_op,
     input wire [5:0]  reg_sel,
-    input wire [63:0] imm,
+    input wire [63:0] data_in,
     input wire clk,
 
     output logic regbank_we,
@@ -28,7 +28,7 @@ module ctl #(
             CTL_NOP: ;
             CTL_LOAD_IMM: begin
                 regbank_sel <= reg_sel;
-                regbank_valout <= imm;
+                regbank_valout <= data_in;
                 regbank_we <= 1;
             end
             default: ;
