@@ -1,2 +1,1 @@
-mov g0, 1
-hlt
+mov g0, zero
