@@ -85,7 +85,8 @@ static const char *toktab[] = {
     [TT_G15]        = qtok("g15"),
     [TT_IDENT]      = symtok("ident"),
     [TT_MOV]        = qtok("mov"),
-    [TT_ZERO]       = qtok("zero")
+    [TT_ZERO]       = qtok("zero"),
+    [TT_HLT]        = qtok("hlt")
 };
 
 /*
@@ -236,6 +237,41 @@ parse_mov(struct as3_state *state, struct token *tok, struct ast_node **res)
 }
 
 /*
+ * Begin parsing a 'hlt'
+ *
+ * @state: Assembler state
+ * @tok:   Last token
+ * @res:   AST result
+ *
+ * Returns zero on success
+ */
+static int
+parse_hlt(struct as3_state *state, struct token *tok, struct ast_node **res)
+{
+    struct ast_node *root;
+
+    if (state == NULL || tok == NULL) {
+        return -1;
+    }
+
+    if (tok->type != TT_HLT) {
+        return -1;
+    }
+
+    if (ast_alloc_node(state, AST_HLT, &root) < 0) {
+        trace_error(state, "failed to allocate AST_HLT\n");
+        return -1;
+    }
+
+    if (parse_expect(state, tok, TT_NEWLINE) < 0) {
+        return -1;
+    }
+
+    *res = root;
+    return 0;
+}
+
+/*
  * Begin parsing the input assembly file
  *
  * @state: Assembler state
@@ -255,6 +291,12 @@ parse_begin(struct as3_state *state, struct token *tok)
     switch (tok->type) {
     case TT_MOV:
         if (parse_mov(state, tok, &root) < 0) {
+            return -1;
+        }
+
+        break;
+    case TT_HLT:
+        if (parse_hlt(state, tok, &root) < 0) {
             return -1;
         }
 

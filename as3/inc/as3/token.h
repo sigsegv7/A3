@@ -35,6 +35,7 @@ typedef enum {
     TT_ZERO,    /* 'zero' */
     TT_IDENT,   /* <IDENT> */
     TT_MOV,     /* 'mov' */
+    TT_HLT,     /* 'hlt' */
 } tt_t;
 
 /*

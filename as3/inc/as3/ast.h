@@ -17,6 +17,7 @@
 typedef enum {
     AST_MOV,
     AST_REG,
+    AST_HLT
 } ast_type_t;
 
 /*
