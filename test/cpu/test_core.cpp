@@ -23,19 +23,20 @@ int main(int argc, char** argv, char** env)
 
     soc->clk = 0;
     for (int i = 0; i < MAX_SIM_ITER; ++i) {
-        /* Reset on power-up */
-        if (i == 0) {
+        switch (i) {
+        case 0:
+            /* Power-up reset */
             soc->reset = 1;
+            break;
+        case 2:
+            /* De-assert reset after two clocks */
+            soc->reset = 0;
+            break;
         }
 
         soc->eval();
         m_trace->dump(i);
         soc->clk ^= 1;
-
-        /* De-assert reset after two clocks */
-        if (i == 2) {
-            soc->reset = 0;
-        }
     }
 
     m_trace->close();
