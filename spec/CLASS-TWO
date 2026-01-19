@@ -25,3 +25,27 @@ of opcodes for the purpose of defragmentation.
 0x07 : XOR
 0x08 : RESERVED FOR FUTURE USE
 ------------------------------
+
+** UTAP **
+
+A MicroTap is a standard (by Lunota Software) for multiplexing serial links to various
+destinations for the purpose of debugging. Unlike JTAG, it is aimed to be simpler and
+easy to set up with a few wires.
+
+(UTAP CONNECTOR PINOUT)
+------------------------
+SEL[2:0] - Select lines
+RX       - Receive line
+TX       - Transmit line
+------------------------
+
+The select lines allow a specific unit to be selected for
+commands. A function preamble is to be bundled with the
+data on the TX lines.
+
+(SELECT DOMAINS)
+------------------------
+0x00  - Reserved
+0x01  - Program counter
+... RESERVED
+------------------------
