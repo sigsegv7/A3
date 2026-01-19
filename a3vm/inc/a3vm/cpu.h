@@ -19,6 +19,7 @@
 #define OPCODE_IOR      0x08    /* OR IMM */
 #define OPCODE_IAND     0x0A    /* AND IMM */
 #define OPCODE_IXOR     0x0D    /* XOR IMM */
+#define OPCODE_MOV      0x0E    /* MOV REG */
 
 /* Forward declaration */
 struct mainboard;

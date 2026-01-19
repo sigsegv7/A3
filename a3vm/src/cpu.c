@@ -40,6 +40,63 @@ cpu_fetch(struct cpu_desc *desc, struct mainboard *mbp, inst_t *res)
 }
 
 /*
+ * Load a register using its number
+ *
+ * @regs: Registers
+ * @rd: Destination register
+ * @v:  Value to load
+ */
+static int
+cpu_reg_store(struct cpu_regs *regs, uint8_t rd, uint64_t v)
+{
+    if (rd >= REG_MAX) {
+        return -1;
+    }
+
+    /* Write the correct register */
+    if (rd >= REG_G0 && rd <= REG_G15) {
+        regs->gpreg[rd] = v;
+    } else if (rd == REG_SP) {
+        regs->sp = v;
+    } else if (rd == REG_FP) {
+        regs->fp = v;
+    }
+
+    return 0;
+}
+
+/*
+ * Load a value from a register
+ *
+ * @regs: Registers
+ * @rs: Source register
+ * @res: Result is written here
+ *
+ * Returns zero on success
+ */
+static int
+cpu_reg_load(struct cpu_regs *regs, uint8_t rs, uint64_t *res)
+{
+    uint64_t tmp = 0;
+
+    if (res == NULL || rs >= REG_MAX) {
+        return -1;
+    }
+
+    /* Read the correct register */
+    if (rs >= REG_G0 && rs <= REG_G15) {
+        tmp = regs->gpreg[rs];
+    } else if (rs == REG_SP) {
+        tmp = regs->sp;
+    } else if (rs == REG_FP) {
+        tmp = regs->fp;
+    }
+
+    *res = tmp;
+    return 0;
+}
+
+/*
  * Perform a btype IMM operation
  */
 static int
@@ -60,13 +117,9 @@ cpu_btype_iop(struct cpu_desc *cpu, inst_t *inst)
     rd = (inst_raw(inst) >> 8) & 0xFF;
     imm = (inst_raw(inst) >> 16) & 0xFFFF;
 
-    /* Read the correct register */
-    if (rd >= REG_G0 && rd <= REG_G15) {
-        tmp = regs->gpreg[rd];
-    } else if (rd == REG_SP) {
-        tmp = regs->sp;
-    } else if (rd == REG_FP) {
-        tmp = regs->fp;
+    if (cpu_reg_load(regs, rd, &tmp) < 0) {
+        printf("[!] failed to load register in iop\n");
+        return -1;
     }
 
     switch (opcode) {
@@ -84,13 +137,35 @@ cpu_btype_iop(struct cpu_desc *cpu, inst_t *inst)
         break;
     }
 
-    /* Write the correct register */
-    if (rd >= REG_G0 && rd <= REG_G15) {
-        regs->gpreg[rd] = tmp;
-    } else if (rd == REG_SP) {
-        regs->sp = tmp;
-    } else if (rd == REG_FP) {
-        regs->fp = tmp;
+    return cpu_reg_store(regs, rd, tmp);
+}
+
+static int
+cpu_atype_op(struct cpu_desc *desc, inst_t *inst)
+{
+    struct cpu_regs *regs;
+    uint8_t opcode;
+    uint8_t rd0, rs1;
+    uint64_t tmp_src;
+
+    if (desc == NULL || inst == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    regs = &desc->regs;
+    opcode = inst_op(inst);
+    rd0 = (inst_raw(inst) >> 8) & 0xFF;
+    rs1 = (inst_raw(inst) >> 16) & 0xFF;
+
+    switch (opcode) {
+    case OPCODE_MOV:
+        if (cpu_reg_load(regs, rs1, &tmp_src) < 0) {
+            printf("[!] failed to load register in op\n");
+            return -1;
+        }
+
+        return cpu_reg_store(regs, rd0, tmp_src);
     }
 
     return 0;
@@ -173,6 +248,13 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
         case OPCODE_IAND:
         case OPCODE_IMOV:
             if (cpu_btype_iop(desc, &inst) < 0) {
+                return -1;
+            }
+
+            regs->ip += 4;
+            break;
+        case OPCODE_MOV:
+            if (cpu_atype_op(desc, &inst) < 0) {
                 return -1;
             }
 
