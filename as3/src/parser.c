@@ -283,7 +283,6 @@ parser_parse(struct as3_state *state)
 
     while (parse_scan(state, &state->last_token) == 0) {
         tok = curtok(state);
-        printf("got token %s\n", tokstr(tok));
         if (parse_begin(state, tok) < 0) {
             return -1;
         }
