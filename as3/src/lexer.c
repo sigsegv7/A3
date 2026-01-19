@@ -244,6 +244,20 @@ lexer_kw(struct token *tok)
         }
 
         break;
+    case 'm':
+        if (strcmp(tok->s, "mov") == 0) {
+            tok->type = TT_MOV;
+            return 0;
+        }
+
+        break;
+    case 'z':
+        if (strcmp(tok->s, "zero") == 0) {
+            tok->type = TT_ZERO;
+            return 0;
+        }
+
+        break;
     }
 
     return 0;
