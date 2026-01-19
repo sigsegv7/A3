@@ -24,10 +24,10 @@ This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 
 (A TYPE ENCODING)
 
-+---------------------------+
-| OPCODE   RD0   RS1    RS2 |
-| 7:0    13:8   20:9  26:10 |
-+---------------------------+
++-----------------------------+
+| OPCODE   RD0   RS1    RS2   |
+| 7:0     15:8  23:16  31:24  |
++-----------------------------+
 
  (B TYPE ENCODING)
 
