@@ -24,7 +24,7 @@ as3_state_init(struct as3_state *state, const char *path)
         return -1;
     }
 
-    state->out_fd = open(OUTPUT_FILENAME, O_WRONLY | O_CREAT, 0600);
+    state->out_fd = open(OUTPUT_FILENAME, O_WRONLY | O_CREAT | O_TRUNC, 0600);
     if (state->out_fd < 0) {
         close(state->in_fd);
         return -1;
