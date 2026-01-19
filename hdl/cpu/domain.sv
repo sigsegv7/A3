@@ -5,11 +5,13 @@
 
 module domain (
     input wire clk,
-    input wire reset
+    input wire reset,
+    input logic [7:0] bus_in
 );
     logic regbank_we;
     logic [5:0] regbank_sel;
     logic [63:0] regbank_val;
+
     /* verilator lint_off UNUSEDSIGNAL */
     logic [7:0] alu_result;
 
@@ -27,8 +29,9 @@ module domain (
     );
 
     ctl ctl_unit (
-        .ctl_op(0), .reg_sel(1),
-        .imm(0), .clk(clk),
+        .ctl_op(0), .bus_in(bus_in),
+        .reg_sel(1), .imm(0),
+        .clk(clk),
         .regbank_we(regbank_we),
         .regbank_sel(regbank_sel),
         .regbank_valout(regbank_val)

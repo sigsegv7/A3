@@ -11,6 +11,9 @@ module ctl #(
     parameter CTL_NOP = 8'h00,
     parameter CTL_LOAD_IMM = 8'h01
 ) (
+    /* verilator lint_off UNUSEDSIGNAL */
+    input wire [7:0] bus_in,
+
     input wire [7:0]  ctl_op,
     input wire [5:0]  reg_sel,
     input wire [63:0] imm,

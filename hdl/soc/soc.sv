@@ -7,12 +7,12 @@ module soc (
     input wire clk,
     input wire reset
 );
-    /* verilator lint_off UNUSEDSIGNAL */
-    logic [7:0] data_pool;
+    logic [7:0] bus_pool;
 
     domain cpu_domain0 (
         .clk(clk),
-        .reset(reset)
+        .reset(reset),
+        .bus_in(bus_pool)
     );
 
     busctl bus_unit (
@@ -20,6 +20,6 @@ module soc (
         .addr_in(0),
         .data_in(0),
         .clk(clk),
-        .data_out(data_pool)
+        .data_out(bus_pool)
     );
 endmodule
