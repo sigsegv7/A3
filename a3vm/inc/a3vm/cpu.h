@@ -44,6 +44,7 @@ typedef enum {
     REG_G13,
     REG_G14,
     REG_G15,
+    REG_ZERO = 0x12,
     REG_FP = 0x16,
     REG_SP,
     REG_MAX

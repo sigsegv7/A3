@@ -53,6 +53,11 @@ cpu_reg_store(struct cpu_regs *regs, uint8_t rd, uint64_t v)
         return -1;
     }
 
+    /* Fake the write, cannot write to ZERO reg */
+    if (rd == REG_ZERO) {
+        return 0;
+    }
+
     /* Write the correct register */
     if (rd >= REG_G0 && rd <= REG_G15) {
         regs->gpreg[rd] = v;
@@ -92,6 +97,8 @@ cpu_reg_load(struct cpu_regs *regs, uint8_t rs, uint64_t *res)
         tmp = regs->sp;
     } else if (rs == REG_FP) {
         tmp = regs->fp;
+    } else if (rs == REG_ZERO) {
+        tmp = 0;
     } else {
         return -1;
     }
