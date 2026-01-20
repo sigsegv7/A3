@@ -51,7 +51,7 @@ This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 0x02  : SUB REG       [A-TYPE]
 0x03  : ADD IMM       [B-TYPE]
 0x04  : ADD REG       [A-TYPE]
-0x05  : ADD IMM       [B-TYPE]
+0x05  : Reserved      [N/A]
 0x06  : HLT           [C-TYPE]
 0x07  : MOV IMM       [B-TYPE]
 0x08  : OR IMM        [B-TYPE]
