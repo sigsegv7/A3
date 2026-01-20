@@ -87,6 +87,7 @@ static const char *toktab[] = {
     [TT_MOV]        = qtok("mov"),
     [TT_ZERO]       = qtok("zero"),
     [TT_HLT]        = qtok("hlt"),
+    [TT_SRR]        = qtok("srr"),
     [TT_NUMBER]     = symtok("number")
 };
 
