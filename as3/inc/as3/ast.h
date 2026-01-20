@@ -20,7 +20,8 @@ typedef enum {
     AST_IMOV,
     AST_REG,
     AST_NUMBER,
-    AST_HLT
+    AST_HLT,
+    AST_SRR
 } ast_type_t;
 
 /*

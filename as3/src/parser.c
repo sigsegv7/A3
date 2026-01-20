@@ -288,6 +288,41 @@ parse_hlt(struct as3_state *state, struct token *tok, struct ast_node **res)
 }
 
 /*
+ * Begin parsing a 'srr' instruction
+ *
+ * @state: Assembler state
+ * @tok:   Last token
+ * @res:   AST result
+ *
+ * Returns zero on success
+ */
+static int
+parse_srr(struct as3_state *state, struct token *tok, struct ast_node **res)
+{
+    struct ast_node *root;
+
+    if (state == NULL || tok == NULL) {
+        return -1;
+    }
+
+    if (tok->type != TT_SRR) {
+        return -1;
+    }
+
+    if (ast_alloc_node(state, AST_SRR, &root) < 0) {
+        trace_error(state, "failed to allocate AST_SRR\n");
+        return -1;
+    }
+
+    if (parse_expect(state, tok, TT_NEWLINE) < 0) {
+        return -1;
+    }
+
+    *res = root;
+    return 0;
+}
+
+/*
  * Begin parsing the input assembly file
  *
  * @state: Assembler state
@@ -313,6 +348,12 @@ parse_begin(struct as3_state *state, struct token *tok)
         break;
     case TT_HLT:
         if (parse_hlt(state, tok, &root) < 0) {
+            return -1;
+        }
+
+        break;
+    case TT_SRR:
+        if (parse_srr(state, tok, &root) < 0) {
             return -1;
         }
 
