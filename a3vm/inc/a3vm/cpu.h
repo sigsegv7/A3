@@ -22,6 +22,7 @@
 #define OPCODE_IXOR     0x0D    /* XOR IMM */
 #define OPCODE_MOV      0x0E    /* MOV REG */
 #define OPCODE_SRR      0x0F    /* Special register read */
+#define OPCODE_SRW      0x10    /* Special register write */
 
 /* Forward declaration */
 struct mainboard;

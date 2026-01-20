@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
 #include "a3vm/cpu.h"
 #include "a3vm/board.h"
 
@@ -186,7 +187,7 @@ cpu_atype_op(struct cpu_desc *desc, inst_t *inst)
 }
 
 static int
-cpu_srr(struct cpu_desc *desc)
+cpu_sr_x(struct cpu_desc *desc, bool write)
 {
     struct cpu_regs *regs;
     uint64_t g15, g14;
@@ -207,7 +208,12 @@ cpu_srr(struct cpu_desc *desc)
         return -1;
     }
 
-    regs->gpreg[REG_G0] = regs->sreg[id - 1];
+    if (write) {
+        regs->sreg[id - 1] = regs->gpreg[REG_G0];
+    } else {
+        regs->gpreg[REG_G0] = regs->sreg[id - 1];
+    }
+
     return 0;
 }
 
@@ -303,7 +309,14 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
             regs->ip += 4;
             break;
         case OPCODE_SRR:
-            if (cpu_srr(desc) < 0) {
+            if (cpu_sr_x(desc, false) < 0) {
+                return -1;
+            }
+
+            ++regs->ip;
+            break;
+        case OPCODE_SRW:
+            if (cpu_sr_x(desc, true) < 0) {
                 return -1;
             }
 
