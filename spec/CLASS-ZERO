@@ -111,7 +111,7 @@ written with the contents of the G0 register.
 
 +-----------------------------+
 | MASK  PRIORITY    RESERVED  |
-|  0      4:1         63:0    |
+|  0      4:1         63:5    |
 +-----------------------------+
 
  MASK):
