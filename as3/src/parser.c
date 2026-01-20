@@ -316,6 +316,8 @@ parse_begin(struct as3_state *state, struct token *tok)
         }
 
         break;
+    case TT_NEWLINE:
+        break;
     default:
         utok1(state, tok);
         return -1;
