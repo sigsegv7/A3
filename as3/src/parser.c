@@ -198,21 +198,6 @@ parse_mov(struct as3_state *state, struct token *tok, struct ast_node **res)
         return -1;
     }
 
-    /* EXPECT <register> */
-    if (!parse_is_reg(tok)) {
-        utok(state, symtok("register"), tokstr(tok));
-        return -1;
-    }
-
-    if ((rs = token_to_reg(tok->type)) == REG_BAD) {
-        utok(state, symtok("register"), tokstr(tok));
-        return -1;
-    }
-
-    if (parse_expect(state, tok, TT_NEWLINE) < 0) {
-        return -1;
-    }
-
     if (ast_alloc_node(state, AST_MOV, &root) < 0) {
         trace_error(state, "failed to allocate AST_MOV\n");
         return -1;
@@ -223,14 +208,43 @@ parse_mov(struct as3_state *state, struct token *tok, struct ast_node **res)
         return -1;
     }
 
-    if (ast_alloc_node(state, AST_REG, &right) < 0) {
-        trace_error(state, "failed to allocate AST_REG\n");
+    switch (tok->type) {
+    case TT_NUMBER:
+        if (ast_alloc_node(state, AST_NUMBER, &right) < 0) {
+            trace_error(state, "failed to allocate AST_REG\n");
+            return -1;
+        }
+
+        /* This is an immediate move */
+        root->type = AST_IMOV;
+        right->v = tok->v;
+        break;
+    default:
+        /* EXPECT <register> */
+        if (!parse_is_reg(tok)) {
+            utok(state, symtok("register"), tokstr(tok));
+            return -1;
+        }
+
+        if ((rs = token_to_reg(tok->type)) == REG_BAD) {
+            utok(state, symtok("register"), tokstr(tok));
+            return -1;
+        }
+
+        if (ast_alloc_node(state, AST_REG, &right) < 0) {
+            trace_error(state, "failed to allocate AST_REG\n");
+            return -1;
+        }
+
+        right->reg = rs;
+        break;
+    }
+
+    if (parse_expect(state, tok, TT_NEWLINE) < 0) {
         return -1;
     }
 
     left->reg = rd;
-    right->reg = rs;
-
     root->left = left;
     root->right = right;
     *res = root;

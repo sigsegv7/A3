@@ -18,6 +18,7 @@
 /* Valid opcodes */
 #define OP_HLT      0x06        /* HLT */
 #define OP_MOV_REG  0x0E        /* MOV REG  [A] */
+#define OP_IMOV     0x07        /* MOV IMM  [B] */
 
 /*
  * A lookup table used to convert register types
@@ -111,6 +112,49 @@ cg_emit_mov(struct as3_state *state, struct ast_node *root)
 }
 
 static int
+cg_emit_imov(struct as3_state *state, struct ast_node *root)
+{
+    struct ast_node *left, *right;
+    uint8_t rd;
+
+    if (state == NULL || root == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if ((left = root->left) == NULL) {
+        trace_error(state, "MOV has no lhs\n");
+        return -1;
+    }
+
+    if ((right = root->right) == NULL) {
+        trace_error(state, "MOV has no lhs\n");
+        return -1;
+    }
+
+    if (left->type != AST_REG) {
+        trace_error(state, "lhs is not AST_REG\n");
+        return -1;
+    }
+
+    if (right->type != AST_NUMBER) {
+        trace_error(state, "rhs is not AST_NUMBER\n");
+        return -1;
+    }
+
+    if ((rd = cg_reg_op(left->reg)) == REG_BAD) {
+        trace_error(state, "bad lhs register\n");
+        return -1;
+    }
+
+    cg_emitb(state, OP_IMOV);
+    cg_emitb(state, rd);
+    cg_emitb(state, right->v & 0xFF);
+    cg_emitb(state, (right->v >> 8) & 0xFF);
+    return 0;
+}
+
+static int
 cg_emit_hlt(struct as3_state *state, struct ast_node *root)
 {
     if (state == NULL || root == NULL) {
@@ -133,6 +177,12 @@ cg_assemble_node(struct as3_state *state, struct ast_node *root)
     switch (root->type) {
     case AST_MOV:
         if (cg_emit_mov(state, root) < 0) {
+            return -1;
+        }
+
+        return 0;
+    case AST_IMOV:
+        if (cg_emit_imov(state, root) < 0) {
             return -1;
         }
 

@@ -16,7 +16,9 @@
  */
 typedef enum {
     AST_MOV,
+    AST_IMOV,
     AST_REG,
+    AST_NUMBER,
     AST_HLT
 } ast_type_t;
 
@@ -33,6 +35,7 @@ struct ast_node {
     struct ast_node *right;
     union {
         reg_t reg;
+        ssize_t v;
     };
 };
 
