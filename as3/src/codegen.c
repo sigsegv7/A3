@@ -20,6 +20,7 @@
 #define OP_MOV_REG  0x0E        /* MOV REG  [A] */
 #define OP_IMOV     0x07        /* MOV IMM  [B] */
 #define OP_SRR      0x0F        /* SRR      [C] */
+#define OP_SRW      0x10        /* SRW      [C] */
 
 /*
  * A lookup table used to convert register types
@@ -179,6 +180,18 @@ cg_emit_srr(struct as3_state *state, struct ast_node *root)
     return 0;
 }
 
+static int
+cg_emit_srw(struct as3_state *state, struct ast_node *root)
+{
+    if (state == NULL || root == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    cg_emitb(state, OP_SRW);
+    return 0;
+}
+
 int
 cg_assemble_node(struct as3_state *state, struct ast_node *root)
 {
@@ -208,6 +221,12 @@ cg_assemble_node(struct as3_state *state, struct ast_node *root)
         return 0;
     case AST_SRR:
         if (cg_emit_srr(state, root) < 0) {
+            return -1;
+        }
+
+        return 0;
+    case AST_SRW:
+        if (cg_emit_srw(state, root) < 0) {
             return -1;
         }
 
