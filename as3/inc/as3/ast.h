@@ -6,6 +6,7 @@
 #ifndef AS3_AST_H
 #define AS3_AST_H 1
 
+#include <sys/types.h>
 #include <stdint.h>
 #include <stddef.h>
 #include "as3/state.h"
