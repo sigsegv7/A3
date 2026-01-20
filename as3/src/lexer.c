@@ -337,6 +337,11 @@ lexer_kw(struct token *tok)
             return 0;
         }
 
+        if (strcmp(tok->s, "srw") == 0) {
+            tok->type = TT_SRW;
+            return 0;
+        }
+
         break;
     }
 

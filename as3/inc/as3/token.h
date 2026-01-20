@@ -37,7 +37,8 @@ typedef enum {
     TT_NUMBER,  /* <NUMBER> */
     TT_MOV,     /* 'mov' */
     TT_HLT,     /* 'hlt' */
-    TT_SRR      /* 'srr' */
+    TT_SRR,     /* 'srr' */
+    TT_SRW,     /* 'srw' */
 } tt_t;
 
 /*
