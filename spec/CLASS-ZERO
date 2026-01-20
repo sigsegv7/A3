@@ -61,6 +61,8 @@ This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 0x0C  : XOR IMM       [B-TYPE]
 0x0D  : XOR REG       [A-TYPE]
 0x0E  : MOV REG       [A-TYPE]
+0x0F  : SRR           [C-TYPE]
+0x10  : SRW           [C-TYPE]
 --------------------------------
 
 ** Register encoding **
@@ -89,3 +91,34 @@ This region spans up to 0x800000 giving a maximum of 8 MiB for firmware.
 0x16 : FP
 0x17 : SP
 ----------------
+
+** Special registers **
+
+A special register is a processor register that is meant for configuring processor modes, features
+and flags. These registers may be accessed by using the SRR and SRW instructions. The SRR instruction
+allows the special register whose ID is stored in G15:G14 [format: high16:low16] to be read into the G0
+register. Similarly, the SRW instruction allows the special register whose ID is stored in G15:G14 to
+written with the contents of the G0 register.
+
+(SPECIAL REGISTER LIST)
+
+---------------------------------------
+0x00000000 : Reserved
+0x00000001 : Interrupt configuration
+---------------------------------------
+
+(INTERRUPT CONFIGURATION FORMAT)
+
++-----------------------------+
+| MASK  PRIORITY    RESERVED  |
+|  0      4:1         63:0    |
++-----------------------------+
+
+ MASK):
+    When this bit is set, maskable interrupts are to be rejected by
+    the processor core.
+ PRIORITY):
+    This field describes the current interrupt priority level, an interrupt
+    must have a higher value than this field for the processor to accept it.
+ RESERVED):
+    Reserved for future use.
