@@ -34,6 +34,7 @@ typedef enum {
     TT_G15,     /* 'g15' */
     TT_ZERO,    /* 'zero' */
     TT_IDENT,   /* <IDENT> */
+    TT_NUMBER,  /* <NUMBER> */
     TT_MOV,     /* 'mov' */
     TT_HLT,     /* 'hlt' */
 } tt_t;
@@ -48,6 +49,7 @@ struct token {
     union {
         char c;
         char *s;
+        size_t v;
     };
 };
 

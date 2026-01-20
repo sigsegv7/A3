@@ -151,6 +151,72 @@ lexer_scan_ident(struct as3_state *state, int lc, struct token *res)
 }
 
 /*
+ * Scan for a number
+ *
+ * @state: Assembler state
+ * @lc:    Last character
+ * @res:   Token result is written here
+ *
+ * Returns zero on success
+ */
+static int
+lexer_scan_number(struct as3_state *state, int lc, struct token *res)
+{
+    char buf[25];
+    uint8_t buf_i;
+    uint8_t base = 10;
+    char c;
+
+    if (state == NULL || res == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    if (!isdigit(lc)) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    buf_i = 0;
+    if (lc != '0') {
+        buf[buf_i++] = lc;
+    }
+
+    /* Handle base */
+    if (lc == '0') {
+        if ((c = lexer_consume(state, true)) == '\0')
+            return -1;
+    }
+
+    /* Base-16? */
+    if (c == 'x') {
+        if ((c = lexer_consume(state, true)) == '\0')
+            return -1;
+
+        buf[buf_i++] = c;
+        base = 16;
+    }
+
+    for (;;) {
+        c = lexer_consume(state, false);
+        if (!isdigit(c) && !isxdigit(c)) {
+            buf[buf_i] = '\0';
+            lexer_putback(state, c);
+            break;
+        }
+
+        buf[buf_i++] = c;
+        if (buf_i >= sizeof(buf) - 1) {
+            return -1;
+        }
+    }
+
+    res->type = TT_NUMBER;
+    res->v = strtol(buf, NULL, base);
+    return 0;
+}
+
+/*
  * Check an indentifier token against a list of general purpose
  * registers and override the type if it matches.
  *
@@ -297,6 +363,10 @@ lexer_scan(struct as3_state *state, struct token *res)
     default:
         if (lexer_scan_ident(state, c, res) == 0) {
             lexer_kw(res);
+            return 0;
+        }
+
+        if (lexer_scan_number(state, c, res) == 0) {
             return 0;
         }
 
