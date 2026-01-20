@@ -21,6 +21,7 @@
 #define OPCODE_IAND     0x0A    /* AND IMM */
 #define OPCODE_IXOR     0x0D    /* XOR IMM */
 #define OPCODE_MOV      0x0E    /* MOV REG */
+#define OPCODE_SRR      0x0F    /* Special register read */
 
 /* Forward declaration */
 struct mainboard;
@@ -52,6 +53,17 @@ typedef enum {
 } reg_t;
 
 /*
+ * List of valid special registers
+ *
+ * @INTCONF: Interrupt configuration
+ */
+typedef enum {
+    SREG_NONE,
+    SREG_INTCONF,
+    SREG_MAX
+} sreg_t;
+
+/*
  * Represents a single instruction
  */
 typedef union {
@@ -73,12 +85,14 @@ typedef union {
  * @ip:    Instruction pointer
  * @sp:    Stack pointer
  * @fp:    Frame pointer
+ * @sreg:  Special registers
  */
 struct cpu_regs {
     uint64_t gpreg[N_GPREG];
     uint64_t ip;
     uint64_t sp;
     uint64_t fp;
+    uint64_t sreg[SREG_MAX];
 };
 
 /*

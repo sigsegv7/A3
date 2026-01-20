@@ -185,6 +185,32 @@ cpu_atype_op(struct cpu_desc *desc, inst_t *inst)
     return 0;
 }
 
+static int
+cpu_srr(struct cpu_desc *desc)
+{
+    struct cpu_regs *regs;
+    uint64_t g15, g14;
+    uint32_t id;
+
+    if (desc == NULL) {
+        errno = -EINVAL;
+        return -1;
+    }
+
+    regs = &desc->regs;
+    g14 = regs->gpreg[REG_G14];
+    g15 = regs->gpreg[REG_G15];
+
+    id = ((g15 << 16) | g14);
+    if (id >= SREG_MAX || id == 0) {
+        printf("[!] bad special register id\n");
+        return -1;
+    }
+
+    regs->gpreg[REG_G0] = regs->sreg[id - 1];
+    return 0;
+}
+
 int
 cpu_power_up(struct cpu_desc *desc)
 {
@@ -200,6 +226,7 @@ cpu_power_up(struct cpu_desc *desc)
     regs->sp = 0x00;
     regs->fp = 0x00;
     memset(regs->gpreg, 0xFFFFFFFF, sizeof(regs->gpreg));
+    memset(regs->sreg,  0x00000000, sizeof(regs->sreg));
     return 0;
 }
 
@@ -274,6 +301,13 @@ cpu_run(struct cpu_desc *desc, struct mainboard *mbp)
             }
 
             regs->ip += 4;
+            break;
+        case OPCODE_SRR:
+            if (cpu_srr(desc) < 0) {
+                return -1;
+            }
+
+            ++regs->ip;
             break;
         default:
             printf("[!] bad opcode %x\n", opcode);
